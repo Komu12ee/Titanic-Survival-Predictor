@@ -9,7 +9,7 @@ def error_message_detail(error,error_detail:sys):
 
     return error_message
 
-    
+
 
 class CustomException(Exception):
     def __init__(self,error_message,error_detail:sys):
@@ -18,7 +18,3 @@ class CustomException(Exception):
     
     def __str__(self):
         return self.error_message
-    
-
-
-        

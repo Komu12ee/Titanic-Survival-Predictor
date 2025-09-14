@@ -2,7 +2,7 @@ import sys
 import pandas as pd
 from src.exception import CustomException
 from src.utils import load_object
-
+import os
 
 class PredictPipeline:
     def __init__(self):
@@ -27,38 +27,38 @@ class PredictPipeline:
 
 class CustomData:
     def __init__(  self,
-        gender: str,
-        race_ethnicity: str,
-        parental_level_of_education,
-        lunch: str,
-        test_preparation_course: str,
-        reading_score: int,
-        writing_score: int):
+        Pclass:int,
+        Sex: str,
+        Age: int,
+        SibSp: int,
+        Parch: int,
+        Fare: int,
+        Embarked: str):
 
-        self.gender = gender
+        self.sex = Sex
 
-        self.race_ethnicity = race_ethnicity
+        self.embarked = Embarked
 
-        self.parental_level_of_education = parental_level_of_education
+        self.pclass = Pclass
 
-        self.lunch = lunch
+        self.age = Age
 
-        self.test_preparation_course = test_preparation_course
+        self.sibsp = SibSp
 
-        self.reading_score = reading_score
+        self.fare = Fare
 
-        self.writing_score = writing_score
+        self.parch = Parch
 
     def get_data_as_data_frame(self):
         try:
             custom_data_input_dict = {
-                "gender": [self.gender],
-                "race_ethnicity": [self.race_ethnicity],
-                "parental_level_of_education": [self.parental_level_of_education],
-                "lunch": [self.lunch],
-                "test_preparation_course": [self.test_preparation_course],
-                "reading_score": [self.reading_score],
-                "writing_score": [self.writing_score],
+                "Pclass": [self.pclass],
+                "Sex": [self.sex],
+                "Age": [self.age],
+                "SibSp": [self.sibsp],
+                "Parch": [self.parch],
+                "Fare": [self.fare],
+                "Embarked": [self.embarked],
             }
 
             return pd.DataFrame(custom_data_input_dict)

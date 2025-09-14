@@ -16,7 +16,7 @@ from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path=os.path.join('artifacts',"proprocessor.pkl")
+    preprocessor_obj_file_path=os.path.join('artifacts',"preprocessor.pkl")
 
 class DataTransformation:
     def __init__(self):
@@ -28,13 +28,9 @@ class DataTransformation:
         
         '''
         try:
-            numerical_columns = ["writing_score", "reading_score"]
+            numerical_columns = ["Pclass","Age", "SibSp",'Parch', 'Fare']
             categorical_columns = [
-                "gender",
-                "race_ethnicity",
-                "parental_level_of_education",
-                "lunch",
-                "test_preparation_course",
+                'Sex','Embarked'
             ]
 
             num_pipeline= Pipeline(
@@ -85,15 +81,15 @@ class DataTransformation:
 
             preprocessing_obj=self.get_data_transformer_object()
 
-            target_column_name="math_score"
-            numerical_columns = ["writing_score", "reading_score"]
+            target_column_name="Survived"
+            numerical_columns = ["Pclass","Age", "SibSp",'Parch', 'Fare']
 
-            input_feature_train_df=train_df.drop(columns=[target_column_name],axis=1)
+            input_feature_train_df=train_df.drop(columns=["Survived","Name", "Ticket", "Cabin", "PassengerId"],axis=1)
             target_feature_train_df=train_df[target_column_name]
 
-            input_feature_test_df=test_df.drop(columns=[target_column_name],axis=1)
+            input_feature_test_df=test_df.drop(columns=["Survived","Name", "Ticket", "Cabin", "PassengerId"],axis=1)
             target_feature_test_df=test_df[target_column_name]
-
+            print(input_feature_train_df)
             logging.info(
                 f"Applying preprocessing object on training dataframe and testing dataframe."
             )
@@ -122,3 +118,4 @@ class DataTransformation:
             )
         except Exception as e:
             raise CustomException(e,sys)
+# train_arr,test_arr,_=initiate_data_transformation(train_data,test_data)

@@ -5,8 +5,11 @@ import numpy as np
 import pandas as pd
 import dill
 import pickle
-from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+
+
 
 from src.exception import CustomException
 
@@ -22,33 +25,48 @@ def save_object(file_path, obj):
     except Exception as e:
         raise CustomException(e, sys)
     
-def evaluate_models(X_train, y_train,X_test,y_test,models,param):
+def evaluate_models(X_train, y_train, X_test, y_test, models, param):
     try:
         report = {}
 
         for i in range(len(list(models))):
             model = list(models.values())[i]
-            para=param[list(models.keys())[i]]
+            para = param[list(models.keys())[i]]
 
-            gs = GridSearchCV(model,para,cv=3)
-            gs.fit(X_train,y_train)
+            # GridSearch for best params
+            gs = GridSearchCV(model, para, cv=3, scoring='accuracy')
+            gs.fit(X_train, y_train)
 
             model.set_params(**gs.best_params_)
-            model.fit(X_train,y_train)
+            model.fit(X_train, y_train)
 
-            #model.fit(X_train, y_train)  # Train model
-
+            # Predictions
             y_train_pred = model.predict(X_train)
-
             y_test_pred = model.predict(X_test)
 
-            train_model_score = r2_score(y_train, y_train_pred)
+            # Evaluation metrics
+            acc = accuracy_score(y_test, y_test_pred)
+            prec = precision_score(y_test, y_test_pred, zero_division=0)
+            rec = recall_score(y_test, y_test_pred, zero_division=0)
+            f1 = f1_score(y_test, y_test_pred, zero_division=0)
 
-            test_model_score = r2_score(y_test, y_test_pred)
+            # For ROC-AUC (only if binary classification)
+            try:
+                y_test_proba = model.predict_proba(X_test)[:, 1]
+                auc = roc_auc_score(y_test, y_test_proba)
+            except:
+                auc = None
 
-            report[list(models.keys())[i]] = test_model_score
+            report[list(models.keys())[i]] = {
+                "Accuracy": acc,
+                "Precision": prec,
+                "Recall": rec,
+                "F1": f1,
+                "ROC_AUC": auc
+            }
 
         return report
+
 
     except Exception as e:
         raise CustomException(e, sys)
