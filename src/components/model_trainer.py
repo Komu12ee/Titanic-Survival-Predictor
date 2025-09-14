@@ -16,7 +16,7 @@ from sklearn.ensemble import (
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
-model = XGBClassifier(eval_metric='logloss')  # no "use_label_encoder"
+# model = XGBClassifier(eval_metric='logloss')  # no "use_label_encoder"
 
 from catboost import CatBoostClassifier
 from sklearn.metrics import accuracy_score
